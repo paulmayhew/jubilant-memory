@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { cleanedData, rawScrapedData } from '../data/mockData';
 import './FinalProduct.css';
 
 const FinalProduct = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % cleanedData.images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? cleanedData.images.length - 1 : prev - 1
+    );
+  };
+
   return (
     <div className="final-product-container">
       <div className="comparison-header">
@@ -83,28 +95,64 @@ const FinalProduct = () => {
             </div>
 
             <div className="card-body">
-              <div className="info-row">
-                <span className="icon">📍</span>
-                <div className="info-content">
-                  <span className="text">{cleanedData.formatted_address}</span>
-                  <a href={cleanedData.map_url} className="map-link" target="_blank" rel="noopener noreferrer">
-                    📍 View on Map
-                  </a>
-                </div>
-              </div>
-
-              <div className="info-row">
-                <span className="icon">📞</span>
-                <span className="text phone-formatted">{cleanedData.phone}</span>
-              </div>
-
-              <div className="info-row">
-                <span className="icon">🕒</span>
-                <div className="hours-formatted">
-                  <div className="hours-today">
-                    <strong>Today:</strong> 9:00 AM - 5:00 PM
+              <div className="listing-top">
+                <div className="listing-contact">
+                  <div className="info-row">
+                    <span className="icon">📍</span>
+                    <div className="info-content">
+                      <span className="text">{cleanedData.formatted_address}</span>
+                      <a href={cleanedData.map_url} className="map-link" target="_blank" rel="noopener noreferrer">
+                        📍 View on Map
+                      </a>
+                    </div>
                   </div>
-                  <button className="hours-expand">View full hours →</button>
+
+                  <div className="info-row">
+                    <span className="icon">📞</span>
+                    <span className="text phone-formatted">{cleanedData.phone}</span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="icon">🕒</span>
+                    <div className="hours-formatted">
+                      <div className="hours-today">
+                        <strong>Today:</strong> 9:00 AM - 5:00 PM
+                      </div>
+                      <button className="hours-expand">View full hours →</button>
+                    </div>
+                  </div>
+
+                  <div className="image-stats">
+                    <span className="stat-badge">✓ Validated</span>
+                    <span className="stat-badge">✓ Classified</span>
+                  </div>
+                </div>
+
+                <div className="listing-images">
+                  <div className="main-image">
+                    <div className="image-placeholder-large">
+                      {cleanedData.images[currentImageIndex].classification === 'food' && '🍔'}
+                      {cleanedData.images[currentImageIndex].classification === 'exterior' && '🏪'}
+                      {cleanedData.images[currentImageIndex].classification === 'interior' && '🪑'}
+                    </div>
+                    <div className="image-label">
+                      <span className="label-badge">{cleanedData.images[currentImageIndex].type}</span>
+                      <span className="label-text">{cleanedData.images[currentImageIndex].classification}</span>
+                    </div>
+                  </div>
+                  <div className="thumbnail-row">
+                    {cleanedData.images.map((img, index) => (
+                      <div
+                        key={index}
+                        className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                        onClick={() => setCurrentImageIndex(index)}
+                      >
+                        {img.classification === 'food' && '🍔'}
+                        {img.classification === 'exterior' && '🏪'}
+                        {img.classification === 'interior' && '🪑'}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
