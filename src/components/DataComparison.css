@@ -1,0 +1,80 @@
+.data-comparison {
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 20px;
+  color: #f3f4f6;
+}
+
+.data-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #374151;
+}
+
+.data-header h3 {
+  margin: 0;
+  color: white;
+}
+
+.quality-badge {
+  background: #10b981;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.data-content {
+  background: #111827;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.data-json {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #10b981;
+  line-height: 1.6;
+}
+
+.data-issues,
+.data-improvements {
+  background: #374151;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.data-issues h4,
+.data-improvements h4 {
+  margin: 0 0 10px 0;
+  color: white;
+  font-size: 1rem;
+}
+
+.data-issues ul,
+.data-improvements ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.data-issues li,
+.data-improvements li {
+  padding: 6px 0;
+  color: #d1d5db;
+}
+
+.data-issues li {
+  color: #fca5a5;
+}
+
+.data-improvements li {
+  color: #6ee7b7;
+}

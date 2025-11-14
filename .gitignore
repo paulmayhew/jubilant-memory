@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/.idea/deployment.xml
+/nul
+/.claude/settings.local.json
+/TUTORIAL_OUTLINE.md
+/.idea/vcs.xml

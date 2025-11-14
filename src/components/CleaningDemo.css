@@ -1,0 +1,132 @@
+.cleaning-demo-container {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.demo-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.demo-header h3 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.demo-instruction {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.transformations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.transformation-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.transformation-card:hover {
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transformation-card.active {
+  border-color: #9333ea;
+  background: #faf5ff;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
+}
+
+.transformation-card.active:hover {
+  transform: scale(1.02);
+}
+
+.transform-icon {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.transformation-card h4 {
+  margin: 0 0 20px 0;
+  text-align: center;
+  color: #1f2937;
+  font-size: 1.1rem;
+}
+
+.transform-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.before-section,
+.after-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.before-section label,
+.after-section label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-box {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.data-box.before {
+  border: 2px solid #fca5a5;
+}
+
+.data-box.after {
+  border: 2px solid #6ee7b7;
+  background: #f0fdf4;
+}
+
+.data-box.waiting {
+  border: 2px dashed #d1d5db;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.data-item {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #374151;
+  padding: 4px;
+}
+
+.transform-arrow {
+  text-align: center;
+  font-size: 2rem;
+  color: #9333ea;
+  font-weight: bold;
+}

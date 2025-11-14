@@ -1,0 +1,175 @@
+.pipeline-container {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 12px;
+  padding: 30px;
+}
+
+.pipeline-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.pipeline-header h3 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+.pipeline-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.stage-explanation {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border: 2px solid #e9d5ff;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 140px;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+}
+
+.explanation-icon {
+  font-size: 4rem;
+  flex-shrink: 0;
+}
+
+.explanation-content {
+  flex: 1;
+}
+
+.explanation-content h2 {
+  margin: 0 0 12px 0;
+  color: #7e22ce;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.explanation-text {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.pipeline-flow {
+  position: relative;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  padding-bottom: 60px;
+}
+
+.pipeline-stages {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  min-width: max-content;
+}
+
+.pipeline-stage {
+  position: relative;
+  flex: 0 0 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s;
+}
+
+.pipeline-stage.active {
+  border-color: #9333ea;
+  background: #faf5ff;
+}
+
+.pipeline-stage.current {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+  border-color: #9333ea;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+}
+
+.pipeline-stage.next-available {
+  border-color: #d1d5db;
+  background: #ffffff;
+}
+
+.pipeline-stage.next-available:hover {
+  border-color: #9333ea;
+  background: #faf5ff;
+  transform: scale(1.05);
+}
+
+.pipeline-stage:not(.next-available):not(.active):not(.current) {
+  opacity: 0.5;
+}
+
+.stage-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.stage-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.stage-description {
+  font-size: 0.65rem;
+  color: #6b7280;
+}
+
+.stage-arrow {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #d1d5db;
+  transition: color 0.3s;
+}
+
+.stage-arrow.passed {
+  color: #9333ea;
+}
+
+.data-packet {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  z-index: 10;
+}
+
+.pipeline-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #9333ea;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}

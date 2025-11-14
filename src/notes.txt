@@ -1,0 +1,823 @@
+Data Mining Engine
+Content Acquisition Platform
+
+Project Name: projectpydiver
+Component Type: Data Collection Layer
+Colors Note:
+Purple means rebrand that term however you want so it's easier to explain
+Red means this note is specifically for T from P
+
+Overview
+
+The Data Mining Engine is a web content extraction platform for the earthdiver database, primarily used for the tourism and non-profit industries. It automatically harvests structured data from websites, converting unstructured web content into clean, standardized content that can be repurposed for the web, and analytics.
+
+Think of it as a series of robots that gather data from websites—attractions, hotels, restaurants, events—and organize all of it into a searchable database.
+
+
+
+
+
+
+
+
+
+
+
+Business Problem Being Solved
+The Challenge
+Organizations face a critical data problem
+Information is scattered across thousands of websites
+Each website has unique formatting and structure
+Content updates require manual monitoring and data entry
+Keeping information current is labor-intensive and expensive
+Scaling to cover entire regions manually is impractical
+The Solution
+Automated, continuous content harvesting
+Eliminates 80-95% of manual data entry effort
+Updates information as source websites change
+Maintains data freshness critical for tourism data
+Standardizes diverse web content into consistent structures
+
+What It Does
+Core Functionality
+
+Automated Web Crawling
+Visits websites on a regular schedule
+Navigates through web pages like a human would
+Extracts relevant information (business names, addresses, hours, photos, etc.)
+
+Intelligent Content Recognition
+Identifies different types of content (attractions, lodging, dining, events, articles)
+Understands the structure of each website it visits
+Adapts to websites that use JavaScript and dynamic content
+
+Data Structuring
+Converts free-form web content into standardized fields
+Categorizes information (contact details, descriptions, amenities)
+Preserves images, documents, and media files
+
+Quality Assurance
+Validates that extracted data meets requirements
+Checks for duplicates and errors
+Archives original web pages for audit purposes
+Real-World Example
+
+Scenario: A nonprofit board wants to list information about all universities in their region.
+
+Traditional Approach:
+Hire staff to manually visit 200+ websites
+Copy/paste information into spreadsheets
+Manually update quarterly
+Cost: 40+ hours/week ongoing
+Data freshness: 90+ days old
+
+Earthdiver Approach:
+Configure 200 automated crawlers (one-time setup)
+Crawlers run weekly automatically
+Updates appear in database within hours
+Cost: Minimal ongoing maintenance
+Data freshness: 7 days old
+
+Result: 95% reduction in labor, 90% improvement in data freshness
+
+
+
+
+
+
+For Technical Evaluators
+Technology Stack
+
+Core Framework:
+Scrapy 2.0+ - Industry-standard Python web scraping framework
+  - Battle-tested by companies like ScrapingHub (now Zyte)
+  - Handles millions of requests efficiently
+  - Built-in request scheduling and throttling
+
+Advanced Capabilities:
+Scrapy-Playwright - Browser automation for JavaScript-heavy sites
+  - Renders dynamic content like a real browser
+  - Handles single-page applications (React, Vue, Angular)
+
+AsyncIO - Concurrent request processing
+  - 16 parallel requests by default
+  - Maximizes throughput while respecting server limits
+
+Data Management:
+MongoDB (Atlas) - Primary storage
+  - 6 separate databases for different pipeline stages
+  - Flexible schema for varied content types
+
+AWS S3 - Raw HTML archiving
+  - Compliance and audit trail
+  - Enables re-processing without re-scraping
+Architecture: 11-Stage Processing Pipeline
+Each piece of scraped content flows through a pipeline
+
+Page Archive → Saves raw HTML to S3 for legal/audit purposes
+ID Generation → Creates unique identifiers for deduplication
+HTML Decoding → Converts encoded characters to readable text
+Content Cleaning → Removes malicious code, normalizes markup, and cleans
+Media Classification → Categorizes images (header, intro, content)
+Phone Extraction → Parses phone numbers with extensions
+Field Validation → Ensures required data is present
+Typo Correction → Fixes common field name mistakes
+Batch Assembly → Groups items for efficient storage
+MongoDB Storage → Upserts to database with conflict resolution
+Migration Trigger → Notifies downstream systems of new content
+
+Why This Matters
+Each stage can be developed/tested independently
+Failed items can be reprocessed at specific stages
+Quality controls catch errors before they reach production
+Pipeline is extensible for new requirements
+
+Content Type Support
+
+The system handles six distinct content types through a class-based architecture:
+
+Master Records - Core business information
+   - Business name, category, contact information
+   - Used for attractions, lodging, dining establishments
+
+Each Master record will have one or more Topics, each of which is its own data table
+
+Pages - Full webpage content
+   - Multiple content sections with rich HTML
+   - Headers, introductions, detailed descriptions
+
+Files - Downloadable documents
+   - PDFs, brochures, menus
+   - Tracked with metadata and access URLs
+
+Media - Images and videos
+   - Automatic classification by usage type
+   - Thumbnail generation and CDN integration
+
+Articles - Blog posts and news
+   - Author, publication date, full text
+   - Categorization and tagging
+
+Events - Time-based activities
+   - Start/end dates, ticketing, recurrence
+   - Calendar integration support
+
+This provides maximum flexibility without code duplication.
+Specialized Field Structures
+
+The system includes pre-built field definitions for tourism content:
+Attractions:
+Hours of operation with seasonal variations
+Admission prices (adult, child, senior, group rates)
+Accessibility features (ADA compliance, wheelchair access)
+Age restrictions and pet policies
+Lodging:
+Room types and capacity
+Amenities (Wi-Fi, parking, pool, etc.)
+Booking information and rate structures
+Check-in/out times
+Dining:
+Cuisine types and specialty items
+Price ranges and payment methods
+Reservation requirements
+Dietary accommodations (gluten-free, vegan, etc.)
+Trails & Outdoor Recreation:
+Difficulty ratings
+Length and elevation gain
+Trail surface types
+Seasonal closures
+
+Hundreds of specialized fields refined through production use
+
+
+
+
+
+
+
+Scale & Performance
+
+Current Production Metrics
+
+127+ active spiders in production
+36+ client domains currently served
+Concurrent processing: 16 parallel requests per spider
+Batch sizes: Adaptive 5-2,000 items for optimal performance
+
+Scalability Characteristics
+
+Horizontal Scaling:
+Each spider runs independently
+Can distribute across multiple servers
+
+Vertical Scaling:
+Configurable concurrency (currently 16, can go to 100+)
+Batch size optimization based on document size
+Memory-efficient streaming to databases
+
+Cost Efficiency:
+The only measurable cost in deploying a new spider is time and labor, which we continually reduce through applications of AI and modern data mining techniques.
+
+
+This shows the system can grow to handle lots of volume; we are not bottlenecked.
+
+Quality Assurance & Compliance
+Anti-Blocking Measures
+Respect for Robots.txt
+Automatically reads and honors robot exclusion rules
+Skips disallowed pages without human intervention
+Prevents websites wrongly seeing us as malicious actors
+
+Intelligent Throttling
+Auto-throttle algorithm adapts to server response times
+Configurable delays between requests (default: 0.5-1.5 seconds)
+Download delays respect server capabilities
+
+Proxy Rotation
+ScrapeOps SDK integration
+Distributes requests across IP addresses
+Reduces likelihood of blocks
+
+User-Agent Rotation
+Identifies as legitimate crawler
+Rotates browser signatures
+Mimics real user behavior
+Data Quality Controls
+Field-Level Validation
+Required field checks
+Data type validation (URLs, phone numbers, emails)
+Length and format constraints
+
+Deduplication
+Unique pydiver_id prevents duplicate records (collisions)
+Upsert logic updates existing records rather than creating duplicates
+ID tracking across pipeline stages
+
+Audit Trail
+Raw HTML archived to S3
+Timestamped updates with change tracking
+Full re-processing capability from archives
+Integration Architecture
+API Layer (FastAPI)
+The platform includes a management API for operational control:
+
+Endpoints:
+POST /run-spider - Execute spider on-demand
+GET /spiders - List available spiders
+GET /jobs/{job_id} - Check job status
+GET /health - System health checks
+
+Benefits:
+No direct server access required
+Programmatic scheduling and monitoring
+Integration with upstream management interfaces (TrackerAPI)
+Downstream Integration
+
+Migration Pipeline:
+When spiders complete, they trigger:
+HTTP Webhook to augmentation service
+MongoDB Change Streams for real-time updates
+Notifications for operational awareness
+
+
+This shows we can integrate it with diff platforms if we want different users to be able to trigger mining jobs, and adds to the perception of complexity.
+
+
+
+
+
+
+
+
+
+Operational Visibility
+
+Monitoring Tools
+
+ScrapeOps Dashboard
+Real-time spider execution monitoring
+Job statistics and success rates
+Error tracking and alerting
+Historical performance trends
+
+Notifications
+Job start/completion alerts
+Error notifications with stack traces
+
+Performance Metrics Tracked
+
+Items scraped per spider run
+Requests sent/received
+Error rates and types
+Spider runtime duration
+Database insertion performance
+Memory and CPU utilization
+
+
+This shows we have complex monitoring, and are taking end-to-end data processing seriously.
+
+
+
+Competitive Advantages
+vs. General Web Scraping Platforms (Bright Data, Apify, Diffbot)
+
+Advantages:
+Tourism Specialization - Pre-built field structures specific to hospitality
+Full Pipeline - Not just scraping, but validation and transformation
+Domain Expertise - 127+ spiders represent years of industry knowledge
+Custom Integration - Direct MongoDB integration, not generic APIs
+
+
+Risks & Mitigation
+
+Risk 1: Website Changes Breaking Spiders
+Reality: Websites redesign, breaking scrapers
+Frequency: 10-20% of spiders require updates annually
+Mitigation:
+Automated error detection
+Monitoring tools
+Spider update typically takes 2-4 hours
+We minimize occurrences and labor effort with AI and modern tooling
+
+Risk 2: Legal/Terms of Service
+Concern: Potential violation of website Terms of Service
+Mitigation:
+Scrapes only publicly accessible data
+Respects robots.txt and rate limits
+No login bypass or paywall circumvention
+Legal review of practices
+Industry Precedent: Multiple companies successfully operate in this space
+
+Risk 3: Anti-Scraping Technology
+Reality: Websites implement blocking measures
+Mitigation:
+Multi-layer anti-blocking (proxies, browser automation)
+ScrapeOps SDK with 10M+ proxy pool
+Playwright for JavaScript rendering
+Success rate remains >95%
+
+
+
+Growth Roadmap
+Near-Term & Long-Term Enhancements
+
+Self-Service Spider Creation
+Web UI for configuring new spiders
+Template-based spider generation
+Reduces development cost by 50-70%
+
+Real-Time Monitoring
+Live dashboard of all spider executions
+Predictive alerting for failures
+Automated remediation for common errors
+
+Advanced Media Processing
+Automatic image quality assessment
+OCR for text extraction from images
+Video content extraction
+
+Social Media
+Content acquisition by inferring data from business listings and their social media presence, creating data nobody else has.
+
+AI-Powered Scraping
+Machine learning for automatic spider generation
+Computer vision for content extraction
+Fully implemented Natural language processing for categorization
+
+Geographic Expansion
+International website support (non-English)
+Currency and unit conversion
+Multi-language content handling
+
+Real-Time Change Detection
+Instant notification when source websites update
+Differential scraping (only changed content)
+Live data streaming to customers
+
+Data API Platform Licensing
+Earthdiver data product
+
+
+Data Validation & Enrichment Service
+Quality Assurance Layer for Content Pipeline
+
+Project Name: pydiver-augmentation-base
+Component Type: Data Validation & Transformation Layer
+Colors Note:
+Purple means rebrand that term however you want so it's easier to explain
+Red means this note is specifically for T from P
+
+Overview
+Acts as the "quality control checkpoint" between raw scraped content and production-ready data. It validates, standardizes, enriches, and migrates content to ensure only accurate, complete, and properly formatted information reaches the customer’s eyes.
+
+Think of it as an automated inspection and enhancement facility that checks every piece of scraped content, fixes errors, adds missing information (like accurate GPS coordinates), and ensures data quality before it goes live.
+
+Business Problem Being Solved
+The Challenge
+Raw web-scraped data, while comprehensive, suffers from quality issues:
+Inconsistent Formatting - Addresses in different formats, phone numbers with various delimiters
+Missing Information - Many websites lack precise GPS coordinates for mapping
+Data Errors - Typos, incorrect categorizations, broken image links
+Schema Violations - Fields that don't match expected data structures
+Duplicate Content - Same business listed multiple times with slight variations
+
+Business Impact of Poor Data Quality:
+Customer dissatisfaction with inaccurate information
+Failed map integrations due to bad coordinates
+Wasted storage on duplicate records
+Support costs to manually correct errors
+Reputation damage from publishing incorrect content
+The Solution
+
+Automated, multi-stage validation
+Reduces data errors before production deployment
+Enriches content with professional-grade geocoding services
+Standardizes formatting across all data sources
+Validates completeness ensuring required fields are present
+Provides transparency with detailed error reporting
+
+ROI: Eliminating manual data review saves 20-40 hours weekly for typical customer
+
+What It Does
+Core Functions
+Data Validation
+Checks each piece of content against defined rules
+Are required fields present (name, address, category)?
+Are field values in correct format (valid URLs, proper phone numbers)?
+Does the data match the expected schema?
+
+Example: Rejects a restaurant listing missing operating hours before it reaches the production database.
+Address Geocoding
+Converts text addresses to precise GPS coordinates
+Uses professional geocoding services (SmartyStreets, Google Maps)
+Validates addresses are real and deliverable
+Adds latitude/longitude for mapping applications
+Generates embeddable map URLs
+
+Example: Transforms "123 Main Street, Moab, UT 84532" into exact coordinates (38.5733, 109.5498).
+Data Standardization
+Converts "ALL CAPS" titles to "Proper Title Case"
+Standardizes phone numbers to consistent format
+Cleans HTML markup and removes malicious code
+Fixes common typos and field name mistakes
+
+Example: "(435)555-1234", "435.555.1234", and "+1-435-555-1234" ->"435-555-1234"
+Content Enrichment
+Adds valuable information missing from source websites:
+Geospatial calculations (area, perimeter for trail systems)
+Coordinate system transformations (different mapping standards)
+Media validation (checks images are accessible)
+Event date parsing and standardization
+
+Example: A hiking trail with only a route line gets enhanced with calculated distance, elevation gain, related to images of the immediate area.
+
+Migration Management
+Safely moves validated content from staging to production:
+Processes only new records (avoids duplicate work)
+Updates existing records efficiently
+Tracks what's been migrated to prevent repeats
+Notifies teams when migrations complete
+
+
+This section shows the large amount of work we’re doing to enhance and augment data we’re mining, which is all being done automatically, in an evolving codebase that lets us make big improvements quickly.
+
+
+
+
+System Architecture
+FastAPI Application
+The application consists of three main layers:
+API Endpoints → Handlers → Services
+These layers feed into the Data Processing Pipeline, which includes:
+Data Processing Pipeline
+Document Validation
+Address Geocoding
+Phone Number Standardization
+Media URL Verification
+Event Date Parsing
+Geospatial Transformations
+Field Schema Validation
+Title Case Normalization
+Database Managers
+Multi-environment support (prep/prod)
+Batch processing with chunking
+Transaction management
+External Services & Storage
+MongoDB (prep/prod environments)
+MySQL (validation rules)
+SmartyStreets (address validation)
+Google Places (geocoding)
+Slack (notifications)
+CKBox (media management)
+
+Processing Pipeline Deep-Dive
+Stage 1: Document Validation
+Purpose: Ensure scraped documents meet basic requirements
+
+Operations:
+Check required fields are present
+Validate field data types (string, number, array, etc.)
+Verify URLs are properly formatted
+Detect invalid or unknown fields
+Output: Valid documents proceed; invalid documents logged with detailed errors
+Stage 2: Address Geocoding
+Purpose: Convert text addresses to GPS coordinates
+
+Multi-Provider Strategy:
+Primary: SmartyStreets US Street API
+   - Highest accuracy for US addresses
+   - USPS-certified database
+   - Returns standardized address format
+
+Fallback: Google Places Geocoding API
+   - Used when SmartyStreets fails
+   - Better for international addresses
+   - Handles less-structured addresses
+
+Result Caching:
+   - Successful geocodes cached in MongoDB
+   - Reduces API costs for duplicate addresses
+   - Improves processing speed
+Output: Documents enriched with latitude, longitude, formatted_address fields
+Stage 3: Phone Number Validation
+Purpose: Standardize phone number formats
+
+Operations:
+Parse various formats: (435) 555-1234, 435.555.1234, 435-555-1234
+Extract extensions and country codes
+Validate number structure (correct digit count)
+Convert to E.164 standard format: +1-435-555-1234
+Output: Consistent phone formatting across all records
+
+Stage 4: Media URL Verification
+Purpose: Ensure images and files are accessible
+Operations:
+HTTP HEAD requests to check URL validity
+Timeout handling (5-second default)
+Mark invalid URLs for manual review
+Calculate percentage of broken media per collection
+Output: Media error statistics; flagged documents with broken links
+Stage 5: Event Date & Sub-Topic Parsing
+Purpose: Standardize event datetime information & using AI to infer event types
+Operations:
+Parse various date formats
+Handle recurrence patterns (daily, weekly, seasonal)
+Validate start/end date logic
+Convert to ISO 8601 standard
+Integration with large language model for deriving event type data
+Output: Consistent datetime fields for calendar integrations, AI labeling to allow sorting and filtering for the user later
+Events are messy because most sites rely on users to directly enter them - normalizing dates and applying topical data gives us an advantage over these sites.
+Stage 6: Geospatial Transformations
+Purpose: Process complex geographic data
+Operations:
+Coordinate system conversions (WGS84, UTM, State Plane)
+Calculate shape metrics (area, perimeter, length)
+Generate Google Maps embed URLs
+Validate coordinate bounds
+
+Example Use Case: Trail systems with GPS tracks in UTM coordinates converted to standard lat/long for web mapping.
+Stage 7: SQL Field Validation
+Purpose: Ensure fields match approved schema
+
+Operations:
+Compare document fields against MySQL validation database
+Identify invalid or deprecated field names
+Flag typos and suggest corrections
+Prevent schema drift
+
+Output: List of invalid fields for developer review
+Stage 8: Title Case Normalization
+Purpose: Fix formatting issues in titles
+
+Operations:
+Detect ALL CAPS titles
+Apply title case rules (capitalize important words)
+Preserve acronyms and special cases
+Handle multi-language titles
+
+Output: Professional, readable titles
+
+The first thing a user will notice about a listing is the title - this is important.
+
+API Endpoints
+
+Migration Endpoint
+POST /eps
+Triggers migration from prep to production database
+Parameters: collection name, environment
+Response: Migration statistics (records processed, errors, timing)
+Use Case: Scheduled migrations after scraping completes
+
+Address Validation
+POST /address/validate
+Validates and geocodes a single address
+Parameters: street, city, state, zip
+Response: Validated address with lat/long, confidence score
+Use Case: Real-time address validation in user forms
+
+Reverse Geocoding
+POST /address/reverse
+Converts GPS coordinates to street address
+Parameters: latitude, longitude
+Response: Formatted address
+Use Case: User drops pin on map, system finds address
+
+Map URL Generation
+POST /address/map-url
+Generates embeddable Google Maps URL
+Parameters: address or coordinates, zoom level, map type
+Response: Embed URL
+Use Case: Display maps on partner websites
+
+Source Metadata Sync
+PUT /sources/sync
+Updates source tracking information
+Parameters: collection name, statistics
+Response: Sync confirmation
+Use Case: Track which websites provide data
+
+Health Check
+GET /health
+System status verification
+Checks: MongoDB connectivity, MySQL connectivity, API availability
+Response: Status of all dependencies
+Use Case: Monitoring and alerting
+
+
+
+
+
+
+
+
+Data Quality Impact
+
+Measurable Improvements
+
+Before Augmentation Service:
+Address accuracy: ~60-70% (many missing coordinates)
+Phone format consistency: ~40% (varied wildly)
+Invalid media URLs: 15-20% (broken links)
+Schema violations: 10-15% (unknown fields)
+Processing time: Manual review took 20-40 hours/week
+
+After Augmentation Service:
+Address accuracy: 98-99% (SmartyStreets + Google fallback)
+Phone format consistency: 99% (automated standardization)
+Invalid media URLs: <2% (pre-flagged for fixing)
+Schema violations: <1% (automated detection and correction)
+Processing time: <1 hour automated + 2-4 hours manual review
+
+Result: 90%+ reduction in manual quality assurance effort
+Error Prevention Examples
+Example 1: Bad Geocoding Prevented
+Input: "123 Main St, Moab" (incomplete address)
+Without Validation: System guesses wrong city, pins business 50 miles away
+With Validation: Rejects incomplete address, prompts for full address
+Business Impact: Prevents customer frustration from wrong location
+Example 2: Broken Image Links Caught
+Input: Restaurant with 10 menu images from scraping
+Without Validation: 4 images return 404 errors when users view page
+With Validation: Flags 4 broken URLs before production, only publishes 6 good images
+Business Impact: Professional appearance, no broken images
+Example 3: Data Type Errors Fixed
+Input: Price field contains text: "Call for pricing"
+Without Validation: System crashes trying to sort by price (expects number)
+With Validation: Converts to null, adds flag for manual review
+Business Impact: System stability, graceful handling
+
+
+
+
+Integration with Project Ecosystem
+Upstream: Receives from projectpydiver
+
+Data Flow:
+Scrapers complete collection run
+Raw data lands in pydiver_prep MongoDB database
+Scrapers trigger webhook: POST /eps?collection=attractions&environment=prep
+Augmentation service processes collection
+Validated data moves to pydiver_prod database
+
+Integration Method:
+HTTP webhooks (fire-and-forget)
+MongoDB change streams (real-time updates)
+Notifications (human awareness)
+Downstream: Feeds to trackerAPI
+
+Data Flow:
+Augmentation service completes processing
+Updates metadata in tracker.sources collection
+TrackerAPI displays validated content in UI
+Users perform final review and approval
+Content becomes available to partner sites
+
+Shared Resources:
+Same MongoDB cluster
+Shared validation rules in MySQL
+Common field definitions
+Unified error taxonomy
+
+
+
+
+
+Monitoring & Observability
+Real-Time Metrics:
+Documents processed per hour
+Validation error rates by type
+Geocoding API success rates
+Processing duration trends
+Database query performance
+Alerting:
+Migration start/completion notifications
+High error rate warnings (>10%)
+API failures (SmartyStreets or Google downtime)
+Database connection issues
+Processing timeouts
+Logging Strategy:
+Structured JSON logs with Loguru
+Log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+Request tracing with correlation IDs
+Error stack traces with context
+Performance profiling data
+Retry Logic (Tenacity):
+Automatic retry for failures
+Exponential backoff (wait longer between retries)
+Maximum retry limits (don't retry forever)
+Fallback strategies (switch to backup API)
+
+Connection Pooling:
+Reuses database connections efficiently
+Configurable pool sizes
+Connection health checks
+Graceful degradation on overload
+Batch Processing:
+Processes documents in chunks (100-1000 at a time)
+Prevents memory exhaustion on large collections
+Allows progress tracking
+Enables partial failure recovery
+Error Isolation:
+One document error doesn't fail entire batch
+Errors logged with full context
+Failed documents can be reprocessed separately
+Successful documents commit immediately
+
+
+
+Competitive Advantages
+vs. No Validation (Direct Scraping to Production)
+Drastically fewer data errors
+Professional appearance (no broken links, consistent formatting)
+Customer trust and satisfaction
+Reduced support costs
+vs. Manual Data Review
+10-20x faster processing
+Consistent quality (no human fatigue errors)
+24/7 operation (no business hours limitation)
+Detailed error reporting
+vs. Building In-House
+Mature validation rules refined over time
+Multi-provider redundancy
+Proven geocoding accuracy (98-99%)
+Operational monitoring already built-in
+
+
+
+Growth Roadmap
+
+Near-Term
+
+Machine Learning Validation
+   - Train models to predict invalid data
+   - Automatic categorization suggestions
+   - Anomaly detection for outliers
+
+Enhanced Media Processing
+   - Image quality assessment (resolution, blur detection)
+   - Automatic image categorization (food, exterior, interior)
+   - Copyright and license validation
+
+Performance Optimization
+   - Parallel geocoding (batch API calls)
+   - Intelligent caching strategies
+   - Connection pooling optimization
+Long-Term
+
+AI-Powered Enrichment
+   - Automatic content categorization
+   - Sentiment analysis on reviews
+   - Automatic tagging and keyword extraction
+
+Real-Time Validation
+   - Validate data as it's scraped (not post-processing)
+   - Live feedback to scrapers on quality
+   - Adaptive scraping based on validation results
+
+Predictive Quality Scoring
+   - Score sources by historical quality
+   - Prioritize high-quality sources
+   - Flag problematic sources automatically
+
+
+

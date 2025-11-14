@@ -1,0 +1,70 @@
+.field-highlighter-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.highlighted {
+  border: 3px solid;
+  animation: pulse 1s ease-in-out;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.field-legend {
+  flex: 1;
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.field-legend h4 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+}
+
+.field-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.field-item.active {
+  background: #f3f4f6;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.field-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.field-item span {
+  flex: 1;
+  font-weight: 500;
+}
+
+.checkmark {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.gallery-section.highlighted {
+  padding: 8px;
+}
