@@ -1,28 +1,38 @@
 .tutorial-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .tutorial-header {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 30px;
-  background: linear-gradient(135deg, #9333ea 0%, #6366f1 100%);
-  color: white;
-  border-radius: 12px;
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .tutorial-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 2.5rem;
+  margin: 0 0 var(--space) 0;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .tutorial-header p {
-  margin: 0 0 20px 0;
-  font-size: 1.2rem;
-  opacity: 0.9;
+  margin: 0;
+  color: var(--neutral-600);
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
 .restart-btn {
@@ -45,45 +55,71 @@
 .tutorial-content {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: var(--space-xl);
 }
 
 .tutorial-section {
   background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  scroll-margin-top: 20px;
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--neutral-200);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tutorial-section:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--neutral-200);
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space);
 }
 
 .section-header h2 {
   margin: 0;
-  color: #1f2937;
-  font-size: 1.5rem;
+  color: var(--neutral-900);
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   flex: 1;
   min-width: 200px;
 }
 
 .tutorial-footer {
   text-align: center;
-  padding: 30px;
-  margin-top: 40px;
-  background: #f3f4f6;
-  border-radius: 12px;
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  border-radius: var(--radius-xl);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
+  letter-spacing: -0.01em;
 }
 
 .tutorial-footer p {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .tutorial-header h1 {
+    font-size: 2rem;
+  }
+
+  .tutorial-section {
+    padding: var(--space-lg);
+  }
+
+  .section-header {
+    flex-direction: column;
+  }
 }

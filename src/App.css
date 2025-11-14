@@ -1,13 +1,15 @@
 .App {
   min-height: 100vh;
-  background: linear-gradient(180deg, #faf5ff 0%, #f3f4f6 100%);
+  background: linear-gradient(135deg,
+    var(--neutral-50) 0%,
+    var(--neutral-100) 50%,
+    var(--neutral-200) 100%
+  );
+  padding: var(--space-2xl) var(--space-lg);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
+@media (max-width: 768px) {
+  .App {
+    padding: var(--space-lg) var(--space);
+  }
 }

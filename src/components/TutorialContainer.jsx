@@ -244,7 +244,7 @@ const TutorialContainer = () => {
       </div>
 
       <div className="tutorial-footer">
-        <p>95% less work • 90% fresher data • AI-enhanced • Fully automated</p>
+        <p>95% less work • 90% fresher data • AI-enhanced</p>
       </div>
     </div>
   );
